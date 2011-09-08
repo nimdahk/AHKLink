@@ -31,7 +31,7 @@ AHKLink(SearchText, ForceBasic=0, ShortLink=0, ForceSearch=0)
 
 AHKLink_ForumSearch(SearchText, ByRef OutTitle = 0)
 {
-	url := "http://www.autohotkey.com/search/search.php?site=0&path=&result_page=search.php&query_string=" AHKLink_EncodeURL(Trim(text)) "&option=start&search=Search"
+	url := "http://www.autohotkey.com/search/search.php?site=0&path=&result_page=search.php&query_string=" AHKLink_EncodeURL(Trim(SearchText)) "&option=start&search=Search"
 	UrlDownloadToFile, % url, % f := A_Temp "\AHKLinkForumSearch.tmp"
 	FileRead, Outdata, % f
    	RegExMatch(OutData, "<p class='blue'>.*?<a.*?href=""(.*?)"".*?>(.*?)</a>.*?</p>", t)
@@ -43,7 +43,7 @@ AHKLink_ForumSearch(SearchText, ByRef OutTitle = 0)
 
 ; AHKLink_Shorten() - Shortens an autohotkey link using d.ahk4.me
 ; Original code posted at http://ahk4.me/oVRhg9 by nimda
-; returns: shortlink on success, 0 or bit.ly errcode on failure
+; returns: shortlink on success, 0 or bit.ly errcode (such as "INVALID_URI") on failure
 
 AHKLink_Shorten(Link)
 {
@@ -82,10 +82,13 @@ AHKLink_TSVRet(SearchText, ForceBasic=0)
 	}
 	Loop Read, AHKLink_index.tsv
 	{
-		lf := A_LoopField
-		pTab := inStr(lf, A_Tab)
+		 lf := A_LoopReadLine
+		,pTab := inStr(lf, A_Tab)
 		If SubStr(lf, 1, pTab-1) = SearchText
+		{
 			out := SubStr(lf, pTab+1)
+			break
+		}
 	}
 	If !out
 		return 0
