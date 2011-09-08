@@ -47,16 +47,16 @@ AHKLink_ForumSearch(SearchText, ByRef OutTitle = 0)
 
 AHKLink_Shorten(Link)
 {
-	static rep :=		"&|%26,=|%3D,?|%3F,#|%23,:|%3A,/|%2F, |%20"
+	static rep :=		"&|%26,=|%3D,?|%3F,#|%23,:|%3A,/|%2F, |%20,~|%7E"
 	     , endpoint :=	"http://api.bitly.com/v3/shorten?login=ahk4me&apiKey=R_4b3df1f5417d94ff356ed511fd50a153&format=txt&longUrl="
-	If RegExMatch(Link, "i)$http://www.autohotkey.net/~Lexikos/AutoHotkey_L/docs/commands/(.*?).htm(#.*)?$", match)
+	If RegExMatch(Link, "i)^(?:http://)?www.autohotkey.net/~Lexikos/AutoHotkey_L/docs/commands/(.*?).htm(#.*)?$", match)
 		return "http://d.ahk4.me/~" . match1 . match2
-	If RegExMatch(Link, "i)$http://www.autohotkey.net/~Lexikos/AutoHotkey_L/docs/(.*?).htm(#.*)?$", match)
+	If RegExMatch(Link, "i)^(?:http://)?www.autohotkey.net/~Lexikos/AutoHotkey_L/docs/(.*?).htm(#.*)?$", match)
 		return "http://d.ahk4.me/" . match1 . match2
 	Loop Parse, rep, `,
 		StringReplace, Link, Link, % SubStr(A_LoopField, 1, 1), % SubStr(A_LoopField, 3), All
 	UrlDownloadToFile
-	, %endpoint%Link
+	, %endpoint%%Link%
 	, % fn :=   A_Temp "\BitlyAHK4MEAHKLinkShorten.tmp"
 	If ErrorLevel
 		return 0
@@ -99,6 +99,7 @@ AHKLink_TSVRet(SearchText, ForceBasic=0)
 
 
 ; AHKLink_EncodeUrl() - Returns an encoded url for use with the autohotkey search
+; %20 is acceptable for spaces. Lowercase as in %2b works fine.
 
 AHKLink_EncodeUrl(Text){
    f := A_FormatInteger
