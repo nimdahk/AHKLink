@@ -43,7 +43,7 @@ AHKLink_ForumSearch(SearchText, ByRef OutTitle = 0)
 
 ; AHKLink_Shorten() - Shortens an autohotkey link using d.ahk4.me
 ; Original code posted at http://ahk4.me/oVRhg9 by nimda
-; returns: shortlink on success, 0 or bit.ly errcode (such as "INVALID_URI") on failure
+; returns: shortlink on success, 0 (failed connection) or bit.ly errcode (such as "INVALID_URI") on failure
 
 AHKLink_Shorten(Link)
 {
@@ -58,7 +58,7 @@ AHKLink_Shorten(Link)
 	UrlDownloadToFile
 	, %endpoint%%Link%
 	, % fn :=   A_Temp "\BitlyAHK4MEAHKLinkShorten.tmp"
-	If ErrorLevel
+	If ErrorLevel ; Failed download
 		return 0
 	Fileread, Url, % fn
 	return RegExReplace(Url, "\R")
