@@ -47,14 +47,12 @@ AHKLink_ForumSearch(SearchText, ByRef OutTitle = 0)
 
 AHKLink_Shorten(Link)
 {
-	static rep :=		"&|%26,=|%3D,?|%3F,#|%23,:|%3A,/|%2F, |%20,~|%7E"
-	     , endpoint :=	"http://api.bitly.com/v3/shorten?login=ahk4me&apiKey=R_4b3df1f5417d94ff356ed511fd50a153&format=txt&longUrl="
+	static endpoint :=	"http://api.bitly.com/v3/shorten?login=ahk4me&apiKey=R_4b3df1f5417d94ff356ed511fd50a153&format=txt&longUrl="
 	If RegExMatch(Link, "i)^(?:http://)?www.autohotkey.net/~Lexikos/AutoHotkey_L/docs/commands/(.*?).htm(#.*)?$", match)
 		return "http://d.ahk4.me/~" . match1 . match2
 	If RegExMatch(Link, "i)^(?:http://)?www.autohotkey.net/~Lexikos/AutoHotkey_L/docs/(.*?).htm(#.*)?$", match)
 		return "http://d.ahk4.me/" . match1 . match2
-	Loop Parse, rep, `,
-		StringReplace, Link, Link, % SubStr(A_LoopField, 1, 1), % SubStr(A_LoopField, 3), All
+	link := AHKLink_EncodeUrl(link)
 	UrlDownloadToFile
 	, %endpoint%%Link%
 	, % fn :=   A_Temp "\BitlyAHK4MEAHKLinkShorten.tmp"
@@ -109,7 +107,7 @@ AHKLink_EncodeUrl(Text){
    SetFormat, integer, hex
    Loop Parse, Text
       If A_loopField is not alnum
-         r .= "%" . SubStr(Asc(A_LoopField), 3)
+         r .= "%" . SubStr("0" . SubStr(Asc(A_LoopField), 3), -1)
       else r.= A_LoopField
    SetFormat, integer, %f%
    return r
