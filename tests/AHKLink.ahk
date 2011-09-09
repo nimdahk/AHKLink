@@ -2,7 +2,6 @@
 SetWorkingDir .. ; For the index file
 ; This demonstrates all options in AHKLink()
 ; Simple search:
-/*
 MsgBox % clipboard := AHKLink("IfWinActive") ; http://www.autohotkey.net/~Lexikos/AutoHotkey_L/docs/commands/IfWinActive.htm
 
 ; From the autohotkey.com website: (AHK Basic docs)
@@ -15,6 +14,4 @@ MsgBox % clipboard := AHKLink("IfWinActive help needed", 0, ShortLink := 0, Forc
 ; Let's test the link shortening:
 MsgBox % clipboard := AHKLink("IfWinActive", Forcebasic := 0, ShortLink := 1) ; http://d.ahk4.me/~IfWinActive
 MsgBox % clipboard := AHKLink("IfWinActive", Forcebasic := 1, Shortlink := 1) ; http://ahk4.me/pazauC
-*/
-
 MsgBox % clipboard := AHKLink("Hotkeys",     Forcebasic := 0, ShortLink := 1) ; http://d.ahk4.me/Hotkeys
